@@ -54,7 +54,7 @@ class LatControlINDI():
     self.v_ego = 0
 
   @property
-  def outer_loop_gain(self, CP):
+  def outer_loop_gain(self):
     if int(self.params.get('OpkrLiveTune')) == 1:
       self.live_tune(CP)
       return self.outerLoopGain

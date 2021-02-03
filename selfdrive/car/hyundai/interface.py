@@ -141,10 +141,14 @@ class CarInterface(CarInterfaceBase):
     elif int(params.get('LateralControlMethod')) == 1:
       ret.lateralTuning.init('indi')
       if int(params.get('OpkrLiveTune')) == 1:
-        ret.lateralTuning.indi.innerLoopGain = InnerLoopGain
-        ret.lateralTuning.indi.outerLoopGain = OuterLoopGain
-        ret.lateralTuning.indi.timeConstant = TimeConstant
-        ret.lateralTuning.indi.actuatorEffectiveness = ActuatorEffectiveness
+        ret.lateralTuning.indi.innerLoopGainBP = [0.]
+        ret.lateralTuning.indi.innerLoopGainV = [InnerLoopGain]
+        ret.lateralTuning.indi.outerLoopGainBP = [0.]
+        ret.lateralTuning.indi.outerLoopGainV = [OuterLoopGain]
+        ret.lateralTuning.indi.timeConstantBP = [0.]
+        ret.lateralTuning.indi.timeConstantV = [TimeConstant]
+        ret.lateralTuning.indi.actuatorEffectivenessBP = [0.]
+        ret.lateralTuning.indi.actuatorEffectiveness = [ActuatorEffectiveness]
       else:
         ret.lateralTuning.indi.innerLoopGainBP = [18, 22, 26]
         ret.lateralTuning.indi.innerLoopGainV = [5, 10, 15]
