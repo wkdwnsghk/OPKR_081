@@ -140,10 +140,20 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.newKfTuned = True
     elif int(params.get('LateralControlMethod')) == 1:
       ret.lateralTuning.init('indi')
-      ret.lateralTuning.indi.innerLoopGain = InnerLoopGain
-      ret.lateralTuning.indi.outerLoopGain = OuterLoopGain
-      ret.lateralTuning.indi.timeConstant = TimeConstant
-      ret.lateralTuning.indi.actuatorEffectiveness = ActuatorEffectiveness
+      if int(params.get('OpkrLiveTune')) == 1:
+        ret.lateralTuning.indi.innerLoopGain = InnerLoopGain
+        ret.lateralTuning.indi.outerLoopGain = OuterLoopGain
+        ret.lateralTuning.indi.timeConstant = TimeConstant
+        ret.lateralTuning.indi.actuatorEffectiveness = ActuatorEffectiveness
+      else:
+        ret.lateralTuning.indi.innerLoopGainBP = [18, 22, 26]
+        ret.lateralTuning.indi.innerLoopGainV = [5, 10, 15]
+        ret.lateralTuning.indi.outerLoopGainBP = [18, 22, 26]
+        ret.lateralTuning.indi.outerLoopGainV = [4, 9, 14.99]
+        ret.lateralTuning.indi.timeConstantBP = [18, 22, 26]
+        ret.lateralTuning.indi.timeConstantV = [2, 4, 5.5]
+        ret.lateralTuning.indi.actuatorEffectivenessBP = [18, 22, 26]
+        ret.lateralTuning.indi.actuatorEffectivenessV = [5, 10, 15]      
     elif int(params.get('LateralControlMethod')) == 2:
       ret.lateralTuning.init('lqr')
       ret.lateralTuning.lqr.scale = Scale

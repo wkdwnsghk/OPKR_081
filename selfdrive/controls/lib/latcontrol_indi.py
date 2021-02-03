@@ -3,7 +3,7 @@ import numpy as np
 
 from cereal import log
 from common.realtime import DT_CTRL
-from common.numpy_fast import clip
+from common.numpy_fast import clip, interp
 from selfdrive.car.toyota.values import SteerLimitParams
 from selfdrive.car import apply_toyota_steer_torque_limits
 from selfdrive.controls.lib.drive_helpers import get_steer_max
@@ -12,7 +12,9 @@ from common.params import Params
 
 class LatControlINDI():
   def __init__(self, CP):
+    self.CP = CP
     self.angle_steers_des = 0.
+    self.v_ego = 0.
 
     A = np.array([[1.0, DT_CTRL, 0.0],
                   [0.0, 1.0, DT_CTRL],
@@ -38,10 +40,6 @@ class LatControlINDI():
     self.mpc_frame = 0
     self.params = Params()
 
-    self.RC = CP.lateralTuning.indi.timeConstant
-    self.G = CP.lateralTuning.indi.actuatorEffectiveness
-    self.outer_loop_gain = CP.lateralTuning.indi.outerLoopGain
-    self.inner_loop_gain = CP.lateralTuning.indi.innerLoopGain
     self.alpha = 1. - DT_CTRL / (self.RC + DT_CTRL)
 
     self.sat_count_rate = 1.0 * DT_CTRL
@@ -53,6 +51,39 @@ class LatControlINDI():
     self.delayed_output = 0.
     self.output_steer = 0.
     self.sat_count = 0.0
+    self.v_ego = 0
+
+  @property
+  def outer_loop_gain(self, CP):
+    if int(self.params.get('OpkrLiveTune')) == 1:
+      self.live_tune(CP)
+      return self.outerLoopGain
+    else:
+      return interp(self.v_ego, self.CP.lateralTuning.indi.outerLoopGainBP, self.CP.lateralTuning.indi.outerLoopGainV)
+
+  @property
+  def inner_loop_gain(self):
+    if int(self.params.get('OpkrLiveTune')) == 1:
+      self.live_tune(CP)
+      return self.innerLoopGain
+    else:
+      return interp(self.v_ego, self.CP.lateralTuning.indi.innerLoopGainBP, self.CP.lateralTuning.indi.innerLoopGainV)
+
+  @property
+  def RC(self):
+    if int(self.params.get('OpkrLiveTune')) == 1:
+      self.live_tune(CP)
+      return self.timeConstant
+    else:
+      return interp(self.v_ego, self.CP.lateralTuning.indi.timeConstantBP, self.CP.lateralTuning.indi.timeConstantV)
+
+  @property
+  def G(self):
+    if int(self.params.get('OpkrLiveTune')) == 1:
+      self.live_tune(CP)
+      return self.actuatorEffectiveness
+    else:
+      return interp(self.v_ego, self.CP.lateralTuning.indi.actuatorEffectivenessBP, self.CP.lateralTuning.indi.actuatorEffectivenessV)
 
   def live_tune(self, CP):
     self.mpc_frame += 1
@@ -61,11 +92,6 @@ class LatControlINDI():
       self.innerLoopGain = float(int(self.params.get('InnerLoopGain')) * 0.1)
       self.timeConstant = float(int(self.params.get('TimeConstant')) * 0.1)
       self.actuatorEffectiveness = float(int(self.params.get('ActuatorEffectiveness')) * 0.1)
-      self.RC = self.timeConstant
-      self.G = self.actuatorEffectiveness
-      self.outer_loop_gain = self.outerLoopGain
-      self.inner_loop_gain = self.innerLoopGain
-        
       self.mpc_frame = 0
 
   def _check_saturation(self, control, check_saturation, limit):
@@ -81,8 +107,7 @@ class LatControlINDI():
     return self.sat_count > self.sat_limit
 
   def update(self, active, CS, CP, path_plan):
-    if int(self.params.get('OpkrLiveTune')) == 1:
-      self.live_tune(CP)
+    self.v_ego = CS.vEgo
 
     # Update Kalman filter
     y = np.array([[math.radians(CS.steeringAngle)], [math.radians(CS.steeringRate)]])
