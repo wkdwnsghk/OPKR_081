@@ -54,38 +54,38 @@ class LatControlINDI():
     self.v_ego = 0
 
   @property
-  def outer_loop_gain(self, CP):
+  def outer_loop_gain(self):
     if int(self.params.get('OpkrLiveTune')) == 1:
-      self.live_tune(CP)
+      self.live_tune()
       return self.outerLoopGain
     else:
       return interp(self.v_ego, self.CP.lateralTuning.indi.outerLoopGainBP, self.CP.lateralTuning.indi.outerLoopGainV)
 
   @property
-  def inner_loop_gain(self, CP):
+  def inner_loop_gain(self):
     if int(self.params.get('OpkrLiveTune')) == 1:
-      self.live_tune(CP)
+      self.live_tune()
       return self.innerLoopGain
     else:
       return interp(self.v_ego, self.CP.lateralTuning.indi.innerLoopGainBP, self.CP.lateralTuning.indi.innerLoopGainV)
 
   @property
-  def RC(self, CP):
+  def RC(self):
     if int(self.params.get('OpkrLiveTune')) == 1:
-      self.live_tune(CP)
+      self.live_tune()
       return self.timeConstant
     else:
       return interp(self.v_ego, self.CP.lateralTuning.indi.timeConstantBP, self.CP.lateralTuning.indi.timeConstantV)
 
   @property
-  def G(self, CP):
+  def G(self):
     if int(self.params.get('OpkrLiveTune')) == 1:
-      self.live_tune(CP)
+      self.live_tune()
       return self.actuatorEffectiveness
     else:
       return interp(self.v_ego, self.CP.lateralTuning.indi.actuatorEffectivenessBP, self.CP.lateralTuning.indi.actuatorEffectivenessV)
 
-  def live_tune(self, CP):
+  def live_tune(self):
     self.mpc_frame += 1
     if self.mpc_frame % 300 == 0:
       self.outerLoopGain = float(int(self.params.get('OuterLoopGain')) * 0.1)
