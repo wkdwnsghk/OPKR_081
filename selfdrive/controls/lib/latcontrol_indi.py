@@ -55,43 +55,27 @@ class LatControlINDI():
 
   @property
   def outer_loop_gain(self):
-    if int(self.params.get('OpkrLiveTune')) == 1:
-      self.live_tune()
-      return self.outerLoopGain
-    else:
-      return interp(self.v_ego, self.CP.lateralTuning.indi.outerLoopGainBP, self.CP.lateralTuning.indi.outerLoopGainV)
+    return interp(self.v_ego, self.CP.lateralTuning.indi.outerLoopGainBP, self.CP.lateralTuning.indi.outerLoopGainV)
 
   @property
   def inner_loop_gain(self):
-    if int(self.params.get('OpkrLiveTune')) == 1:
-      self.live_tune()
-      return self.innerLoopGain
-    else:
-      return interp(self.v_ego, self.CP.lateralTuning.indi.innerLoopGainBP, self.CP.lateralTuning.indi.innerLoopGainV)
+    return interp(self.v_ego, self.CP.lateralTuning.indi.innerLoopGainBP, self.CP.lateralTuning.indi.innerLoopGainV)
 
   @property
   def RC(self):
-    if int(self.params.get('OpkrLiveTune')) == 1:
-      self.live_tune()
-      return self.timeConstant
-    else:
-      return interp(self.v_ego, self.CP.lateralTuning.indi.timeConstantBP, self.CP.lateralTuning.indi.timeConstantV)
+    return interp(self.v_ego, self.CP.lateralTuning.indi.timeConstantBP, self.CP.lateralTuning.indi.timeConstantV)
 
   @property
   def G(self):
-    if int(self.params.get('OpkrLiveTune')) == 1:
-      self.live_tune()
-      return self.actuatorEffectiveness
-    else:
-      return interp(self.v_ego, self.CP.lateralTuning.indi.actuatorEffectivenessBP, self.CP.lateralTuning.indi.actuatorEffectivenessV)
+    return interp(self.v_ego, self.CP.lateralTuning.indi.actuatorEffectivenessBP, self.CP.lateralTuning.indi.actuatorEffectivenessV)
 
   def live_tune(self):
     self.mpc_frame += 1
     if self.mpc_frame % 300 == 0:
-      self.outerLoopGain = float(int(self.params.get('OuterLoopGain')) * 0.1)
-      self.innerLoopGain = float(int(self.params.get('InnerLoopGain')) * 0.1)
-      self.timeConstant = float(int(self.params.get('TimeConstant')) * 0.1)
-      self.actuatorEffectiveness = float(int(self.params.get('ActuatorEffectiveness')) * 0.1)
+      self.outer_loop_gain = float(int(self.params.get('OuterLoopGain')) * 0.1)
+      self.inner_loop_gain = float(int(self.params.get('InnerLoopGain')) * 0.1)
+      self.RC = float(int(self.params.get('TimeConstant')) * 0.1)
+      self.G = float(int(self.params.get('ActuatorEffectiveness')) * 0.1)
       self.mpc_frame = 0
 
   def _check_saturation(self, control, check_saturation, limit):
@@ -108,6 +92,9 @@ class LatControlINDI():
 
   def update(self, active, CS, CP, path_plan):
     self.v_ego = CS.vEgo
+
+    if int(self.params.get('OpkrLiveTune')) == 1:
+      self.live_tune()
 
     # Update Kalman filter
     y = np.array([[math.radians(CS.steeringAngle)], [math.radians(CS.steeringRate)]])
