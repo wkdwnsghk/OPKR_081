@@ -150,14 +150,14 @@ class CarInterface(CarInterfaceBase):
         ret.lateralTuning.indi.actuatorEffectivenessBP = [0.]
         ret.lateralTuning.indi.actuatorEffectivenessV = [ActuatorEffectiveness]
       else:
-        ret.lateralTuning.indi.innerLoopGainBP = [18, 22, 26]
-        ret.lateralTuning.indi.innerLoopGainV = [5, 10, 15]
-        ret.lateralTuning.indi.outerLoopGainBP = [18, 22, 26]
-        ret.lateralTuning.indi.outerLoopGainV = [4, 9, 14.99]
-        ret.lateralTuning.indi.timeConstantBP = [18, 22, 26]
-        ret.lateralTuning.indi.timeConstantV = [2, 4, 5.5]
-        ret.lateralTuning.indi.actuatorEffectivenessBP = [18, 22, 26]
-        ret.lateralTuning.indi.actuatorEffectivenessV = [5, 10, 15]      
+        ret.lateralTuning.indi.innerLoopGainBP = [8, 18, 22, 26]
+        ret.lateralTuning.indi.innerLoopGainV = [3, 6, 9, 12]
+        ret.lateralTuning.indi.outerLoopGainBP = [8, 18, 22, 26]
+        ret.lateralTuning.indi.outerLoopGainV = [2, 4, 6, 8]
+        ret.lateralTuning.indi.timeConstantBP = [8, 18, 22, 26]
+        ret.lateralTuning.indi.timeConstantV = [1, 2, 3, 4]
+        ret.lateralTuning.indi.actuatorEffectivenessBP = [8, 18, 22, 26]
+        ret.lateralTuning.indi.actuatorEffectivenessV = [1.5, 3, 4.5, 6]      
     elif int(params.get('LateralControlMethod')) == 2:
       ret.lateralTuning.init('lqr')
       ret.lateralTuning.lqr.scale = Scale

@@ -54,7 +54,7 @@ class LatControlINDI():
     self.v_ego = 0
 
   @property
-  def outer_loop_gain(self):
+  def outer_loop_gain(self, CP):
     if int(self.params.get('OpkrLiveTune')) == 1:
       self.live_tune(CP)
       return self.outerLoopGain
@@ -62,7 +62,7 @@ class LatControlINDI():
       return interp(self.v_ego, self.CP.lateralTuning.indi.outerLoopGainBP, self.CP.lateralTuning.indi.outerLoopGainV)
 
   @property
-  def inner_loop_gain(self):
+  def inner_loop_gain(self, CP):
     if int(self.params.get('OpkrLiveTune')) == 1:
       self.live_tune(CP)
       return self.innerLoopGain
@@ -70,7 +70,7 @@ class LatControlINDI():
       return interp(self.v_ego, self.CP.lateralTuning.indi.innerLoopGainBP, self.CP.lateralTuning.indi.innerLoopGainV)
 
   @property
-  def RC(self):
+  def RC(self, CP):
     if int(self.params.get('OpkrLiveTune')) == 1:
       self.live_tune(CP)
       return self.timeConstant
@@ -78,7 +78,7 @@ class LatControlINDI():
       return interp(self.v_ego, self.CP.lateralTuning.indi.timeConstantBP, self.CP.lateralTuning.indi.timeConstantV)
 
   @property
-  def G(self):
+  def G(self, CP):
     if int(self.params.get('OpkrLiveTune')) == 1:
       self.live_tune(CP)
       return self.actuatorEffectiveness
