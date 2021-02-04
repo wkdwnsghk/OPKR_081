@@ -87,7 +87,7 @@ class LatControlINDI():
     self.v_ego = CS.vEgo
 
     if int(self.params.get('OpkrLiveTune')) == 1:
-      self.live_tune(CP)
+      self.live_tune()
     else:
       self.inner_loop_gain = interp(self.v_ego, self.CP.lateralTuning.indi.innerLoopGainBP, self.CP.lateralTuning.indi.innerLoopGainV)
       self.outer_loop_gain = interp(self.v_ego, self.CP.lateralTuning.indi.outerLoopGainBP, self.CP.lateralTuning.indi.outerLoopGainV)
