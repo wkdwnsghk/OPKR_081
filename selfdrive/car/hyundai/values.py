@@ -576,7 +576,7 @@ FEATURES = {
   "has_scc13": set([]),
   "has_scc14": set([]),
   # these cars use the FCA11 message for the AEB and FCW signals, all others use SCC12
-  "use_fca": {CAR.SONATA, CAR.ELANTRA, CAR.ELANTRA_GT_I30, CAR.PALISADE, CAR.GENESIS_G70, CAR.KONA_HEV}, # 전방추돌관련 계기판 오류가 발생할 경우 여기다 본인 차종을 넣어보세요.
+  "use_fca": {CAR.SONATA, CAR.ELANTRA,CAR.PALISADE, CAR.ELANTRA_GT_I30, CAR.PALISADE, CAR.GENESIS_G70, CAR.KONA_HEV}, # 전방추돌관련 계기판 오류가 발생할 경우 여기다 본인 차종을 넣어보세요.
 
   "use_bsm": {CAR.SONATA, CAR.PALISADE, CAR.GENESIS, CAR.GENESIS_G70, CAR.GENESIS_G80, CAR.GENESIS_G90, CAR.NEXO,
               CAR.KONA, CAR.SONATA_HEV, CAR.SONATA19_HEV, CAR.KONA_EV, CAR.KONA_HEV, CAR.IONIQ_EV, CAR.IONIQ_HEV, CAR.GRANDEUR_HEV,
