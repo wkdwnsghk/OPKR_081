@@ -80,8 +80,8 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 4497. * CV.LB_TO_KG
       ret.wheelbase = 2.804
     elif candidate == CAR.PALISADE:
-      ret.mass = 1999. + STD_CARGO_KG
-      ret.wheelbase = 2.90
+      ret.mass = 1440. + STD_CARGO_KG
+      ret.wheelbase = 2.63
     elif candidate in [CAR.ELANTRA, CAR.ELANTRA_GT_I30]:
       ret.mass = 1275. + STD_CARGO_KG
       ret.wheelbase = 2.7
